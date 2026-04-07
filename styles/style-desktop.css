@@ -1,0 +1,16 @@
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr 1.5fr;
+        align-items: start;
+    }
+
+    .card-display {
+        grid-row: span 2;
+        align-self: center;
+    }
+
+    .stats-display,
+    .evolution-chain {
+        grid-column: 2;
+    }
+}
