@@ -66,6 +66,25 @@ function showSection(id) {
 /* === 2. API FETCH & SEARCH LOGIC       === */
 /* ========================================= */
 
+// --- NEW: TCGDEX API FETCH (API #2) ---
+async function fetchTcgCardImage(name) {
+    try {
+        const response = await fetch(`https://api.tcgdex.net/v2/en/cards?name=${name}`);
+        const cards = await response.json();
+
+        if (cards && cards.length > 0) {
+            // Get detail of first card to get the high-res image
+            const detailRes = await fetch(`https://api.tcgdex.net/v2/en/cards/${cards[0].id}`);
+            const detail = await detailRes.json();
+            return detail.image ? `${detail.image}/high.webp` : null;
+        }
+        return null;
+    } catch (error) {
+        console.error("TCG API Error:", error);
+        return null;
+    }
+}
+
 async function handleSearch() {
     const query = document.getElementById('pokemon-search').value.toLowerCase().trim();
     if (!query) return;
@@ -75,11 +94,19 @@ async function handleSearch() {
     const saveBtn = document.getElementById('save-btn');
 
     statsTarget.innerHTML = '<div class="loader"></div>';
+    cardTarget.innerHTML = '<div class="loader"></div>';
 
     try {
+        // API 1: PokeAPI (Stats)
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
         if (!response.ok) throw new Error('Pokemon not found');
         const data = await response.json();
+
+        // API 2: TCGDex (Visual Card)
+        const tcgImageUrl = await fetchTcgCardImage(data.name);
+
+        // Fallback: Use official artwork if TCG card isn't found
+        const finalImageUrl = tcgImageUrl || data.sprites.other['official-artwork'].front_default;
 
         // Update Display Stats
         statsTarget.innerHTML = `
@@ -89,18 +116,18 @@ async function handleSearch() {
                 <p><strong>HP:</strong> ${data.stats[0].base_stat}</p>
                 <p><strong>Abilities:</strong> ${data.abilities.map(a => a.ability.name).join(', ')}</p>
                 <p><strong>Weight:</strong> ${data.weight / 10} kg</p>
+                ${tcgImageUrl ? '<p style="font-size: 0.7rem; opacity: 0.6;">Visual Source: TCGDex API</p>' : ''}
             </div>
         `;
 
-        const imageUrl = data.sprites.other['official-artwork'].front_default;
-        cardTarget.innerHTML = `<img src="${imageUrl}" class="pokemon-image fade-in" alt="${data.name}">`;
+        cardTarget.innerHTML = `<img src="${finalImageUrl}" class="pokemon-image fade-in" alt="${data.name}">`;
 
         saveBtn.style.display = 'block';
         saveBtn.onclick = () => {
             saveToFavorites({
                 id: data.id,
                 name: data.name,
-                image: imageUrl
+                image: finalImageUrl
             });
         };
 
@@ -109,7 +136,6 @@ async function handleSearch() {
         statsTarget.innerHTML = `<p>Check your spelling and try again!</p>`;
         saveBtn.style.display = 'none';
 
-        // Error Reset Timeout
         setTimeout(() => {
             if (cardTarget.innerHTML.includes("can't find")) {
                 cardTarget.innerHTML = `<div class="card-placeholder">Ready for next search!</div>`;
@@ -150,7 +176,7 @@ function renderFavorites() {
         grid.innerHTML += `
             <article class="fav-card fade-in">
                 <img src="${pokemon.image}" alt="${pokemon.name}">
-                <h3>${pokemon.name}</h3>
+                <h3>${pokemon.name.toUpperCase()}</h3>
                 <button class="remove-btn" onclick="removeFavorite(${pokemon.id})">Remove</button>
             </article>
         `;
