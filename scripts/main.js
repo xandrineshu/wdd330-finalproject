@@ -1,19 +1,204 @@
-import { fetchFullPokemonData } from './api.js';
+/* ========================================= */
+/* === 1. GLOBAL SETTINGS & NAVIGATION   === */
+/* ========================================= */
 
-const searchInput = document.querySelector('.search-area input');
-const searchBtn = document.querySelector('.search-area button');
+let allPokemonNames = [];
 
-searchBtn.addEventListener('click', async () => {
-    const query = searchInput.value;
-    if (query) {
-        console.log(`Searching for: ${query}...`);
-        const data = await fetchFullPokemonData(query);
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialization
+    setInterval(createSparkle, 400);
+    fetchAllNames();
 
-        if (data) {
-            console.log("Data successfully retrieved! Check the objects above.");
-            alert(`Found ${data.stats.name}! Check the console for details.`);
-        } else {
-            alert("Could not find that Pokemon. Check your spelling!");
+    // Setup Navigation
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').replace('#', '') + '-view';
+            showSection(targetId);
+            if (targetId === 'favorites-view') renderFavorites();
+        });
+    });
+
+    // Setup Search
+    document.getElementById('search-btn').addEventListener('click', handleSearch);
+
+    // --- SEARCH SUGGESTIONS ---
+    const searchInput = document.getElementById('pokemon-search');
+    const suggestionsBox = document.getElementById('suggestions');
+
+    searchInput.addEventListener('input', () => {
+        const value = searchInput.value.toLowerCase().trim();
+        suggestionsBox.innerHTML = '';
+
+        if (value.length > 1) {
+            const matches = allPokemonNames
+                .filter(name => name.startsWith(value))
+                .slice(0, 6);
+
+            matches.forEach(match => {
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${match.substring(0, value.length)}</strong>${match.substring(value.length)}`;
+                div.addEventListener('click', () => {
+                    searchInput.value = match;
+                    suggestionsBox.innerHTML = '';
+                    handleSearch();
+                });
+                suggestionsBox.appendChild(div);
+            });
         }
-    }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.target !== searchInput) suggestionsBox.innerHTML = '';
+    });
 });
+
+function showSection(id) {
+    document.querySelectorAll('.view-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    const target = document.getElementById(id);
+    if (target) target.style.display = 'block';
+}
+
+/* ========================================= */
+/* === 2. API FETCH & SEARCH LOGIC       === */
+/* ========================================= */
+
+async function handleSearch() {
+    const query = document.getElementById('pokemon-search').value.toLowerCase().trim();
+    if (!query) return;
+
+    const statsTarget = document.getElementById('stats-target');
+    const cardTarget = document.getElementById('card-target');
+    const saveBtn = document.getElementById('save-btn');
+
+    statsTarget.innerHTML = '<div class="loader"></div>';
+
+    try {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
+        if (!response.ok) throw new Error('Pokemon not found');
+        const data = await response.json();
+
+        // Update Display Stats
+        statsTarget.innerHTML = `
+            <div class="stats-list fade-in">
+                <p><strong>Name:</strong> ${data.name.toUpperCase()}</p>
+                <p><strong>Type:</strong> ${data.types.map(t => t.type.name).join(', ')}</p>
+                <p><strong>HP:</strong> ${data.stats[0].base_stat}</p>
+                <p><strong>Abilities:</strong> ${data.abilities.map(a => a.ability.name).join(', ')}</p>
+                <p><strong>Weight:</strong> ${data.weight / 10} kg</p>
+            </div>
+        `;
+
+        const imageUrl = data.sprites.other['official-artwork'].front_default;
+        cardTarget.innerHTML = `<img src="${imageUrl}" class="pokemon-image fade-in" alt="${data.name}">`;
+
+        saveBtn.style.display = 'block';
+        saveBtn.onclick = () => {
+            saveToFavorites({
+                id: data.id,
+                name: data.name,
+                image: imageUrl
+            });
+        };
+
+    } catch (error) {
+        cardTarget.innerHTML = `<p class="error-msg">Hmm... I can't find that Pokémon! 🔍</p>`;
+        statsTarget.innerHTML = `<p>Check your spelling and try again!</p>`;
+        saveBtn.style.display = 'none';
+
+        // Error Reset Timeout
+        setTimeout(() => {
+            if (cardTarget.innerHTML.includes("can't find")) {
+                cardTarget.innerHTML = `<div class="card-placeholder">Ready for next search!</div>`;
+                statsTarget.innerHTML = `<p>(Stats will appear here)</p>`;
+            }
+        }, 5000);
+    }
+}
+
+/* ========================================= */
+/* === 3. LOCAL STORAGE & FAVORITES      === */
+/* ========================================= */
+
+function saveToFavorites(pokemon) {
+    let favorites = JSON.parse(localStorage.getItem('poke-favorites')) || [];
+
+    if (!favorites.some(f => f.id === pokemon.id)) {
+        favorites.push(pokemon);
+        localStorage.setItem('poke-favorites', JSON.stringify(favorites));
+        showToast(`✨ ${pokemon.name.toUpperCase()} added to deck!`);
+        if (document.getElementById('favorites-view').style.display !== 'none') renderFavorites();
+    } else {
+        showToast("💖 Already in your favorites!");
+    }
+}
+
+function renderFavorites() {
+    const grid = document.getElementById('favorites-grid');
+    const favorites = JSON.parse(localStorage.getItem('poke-favorites')) || [];
+
+    if (favorites.length === 0) {
+        grid.innerHTML = `<div class="empty-msg"><p>Your PokéDeck is lonely... 🍃</p></div>`;
+        return;
+    }
+
+    grid.innerHTML = '';
+    favorites.forEach(pokemon => {
+        grid.innerHTML += `
+            <article class="fav-card fade-in">
+                <img src="${pokemon.image}" alt="${pokemon.name}">
+                <h3>${pokemon.name}</h3>
+                <button class="remove-btn" onclick="removeFavorite(${pokemon.id})">Remove</button>
+            </article>
+        `;
+    });
+}
+
+window.removeFavorite = function (id) {
+    let favorites = JSON.parse(localStorage.getItem('poke-favorites')) || [];
+    favorites = favorites.filter(f => f.id !== id);
+    localStorage.setItem('poke-favorites', JSON.stringify(favorites));
+    renderFavorites();
+};
+
+/* ========================================= */
+/* === 4. AESTHETICS & NOTIFICATIONS     === */
+/* ========================================= */
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast-notification fade-in";
+    toast.innerText = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.remove("fade-in");
+        toast.classList.add("fade-out");
+        setTimeout(() => toast.remove(), 500);
+    }, 2500);
+}
+
+function createSparkle() {
+    const emojis = ["✨", "🌸", "⭐", "☁️"];
+    const sparkle = document.createElement("div");
+    sparkle.classList.add("sparkle");
+    sparkle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    const side = Math.random() > 0.5 ? "left" : "right";
+    sparkle.style.left = side === "left" ? (Math.random() * 15 + "vw") : (Math.random() * 15 + 85 + "vw");
+    sparkle.style.animationDuration = (Math.random() * 3 + 3) + "s";
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 6000);
+}
+
+async function fetchAllNames() {
+    try {
+        const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000');
+        const data = await res.json();
+        allPokemonNames = data.results.map(p => p.name);
+    } catch (e) {
+        console.error("Failed to load suggestions.");
+    }
+}

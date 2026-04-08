@@ -1,16 +1,146 @@
-@media (min-width: 768px) {
+@media (min-width: 900px) {
+
+    /* 1. Header Layout */
+    header {
+        position: relative;
+        padding: 0;
+        /* Let internal divs handle padding */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 2. Logo Area (The Lavender Part) */
+    .logo-area {
+        background-color: var(--lavender);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 40px 20px;
+        /* Gives room for mascots */
+        margin-bottom: 0;
+        /* Remove margin so it touches the nav bar */
+    }
+
+    .logo-area h1 {
+        font-size: 2.5rem;
+        /* Larger title on desktop */
+    }
+
+    .icon-placeholder {
+        width: 80px;
+        height: 80px;
+    }
+
+
+    /* 3. Mascots Positioning */
+    .mascot {
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        /* Perfectly centers them vertically in the lavender bar */
+        width: 140px;
+        height: auto;
+        z-index: 1;
+        filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.1));
+    }
+
+    .left-mascot {
+        left: 40px;
+        animation: floaty-left 3s ease-in-out infinite;
+    }
+
+    .right-mascot {
+        right: 40px;
+        animation: floaty 3s ease-in-out infinite;
+    }
+
+    /* 4. Navigation (The Pink Part) */
+    nav {
+        width: 100%;
+        background-color: var(--primary-pink);
+        border-top: 0px solid var(--charcoal);
+        border-bottom: 0px solid var(--charcoal);
+        z-index: 10;
+        /* Ensures it stays on top of any stray sparkles */
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: center;
+        gap: 80px;
+        padding: 25px;
+        margin: 0;
+        /* Reset margins from mobile */
+        list-style: none;
+    }
+
+    nav a {
+        min-width: 150px;
+        text-align: center;
+        background: white;
+        padding: 10px 60px;
+        border: 3px solid var(--charcoal);
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        color: var(--charcoal);
+    }
+
+    /* 5. Search Bar & Grid (Stay the same) */
+    .search-area {
+        padding: 30px 20px;
+    }
+
+    #pokemon-search {
+        width: 550px;
+        padding: 15px;
+    }
+
     .grid-container {
-        grid-template-columns: 1fr 1.5fr;
-        align-items: start;
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+        grid-template-rows: auto auto;
+        gap: 40px;
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
     .card-display {
-        grid-row: span 2;
-        align-self: center;
+        grid-column: 1;
+        grid-row: 1 / span 2;
     }
 
-    .stats-display,
-    .evolution-chain {
-        grid-column: 2;
+    /* Animations */
+    @keyframes floaty {
+
+        0%,
+        100% {
+            transform: translateY(-50%);
+        }
+
+        50% {
+            transform: translateY(-60%);
+        }
+    }
+
+    @keyframes floaty-left {
+
+        0%,
+        100% {
+            transform: translateY(-50%) scaleX(-1);
+        }
+
+        50% {
+            transform: translateY(-60%) scaleX(-1);
+        }
+    }
+
+    /* 6. About Me Section */
+    .about-container {
+        max-width: 870px;
     }
 }

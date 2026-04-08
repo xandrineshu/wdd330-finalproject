@@ -1,0 +1,97 @@
+/* ========================================= */
+/* === Medium View (Tablets / 580px+)    === */
+/* ========================================= */
+
+@media (min-width: 600px) and (max-width: 1000px) {
+    .logo-area {
+        background-color: var(--lavender);
+        display: flex;
+        align-items: left;
+        justify-content: left;
+        padding-bottom: 20px;
+        position: relative;
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    /* 2. Hide Pikachu, Show Eevee */
+    .left-mascot {
+        display: none;
+    }
+
+    .right-mascot {
+        display: block;
+        position: absolute;
+        right: 30px;
+        top: 35%;
+        width: 100px;
+        z-index: 1;
+        animation: floaty-medium 3s ease-in-out infinite;
+    }
+
+    @keyframes floaty-medium {
+
+        0%,
+        100% {
+            transform: translateY(-50%);
+        }
+
+        50% {
+            transform: translateY(-65%);
+        }
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: center;
+        gap: 45px;
+        padding: 20px;
+    }
+
+    nav a {
+        min-width: 120px;
+        padding: 10px;
+        font-size: 1rem;
+        padding-inline: 20px;
+    }
+
+    /* 3. The Grid Fix: Card & Stats side-by-side */
+    .grid-container {
+        display: grid;
+        /* Two equal columns for Card and Stats */
+        grid-template-columns: 1fr 1fr;
+        /* Two rows: top for Card/Stats, bottom for Evolution */
+        grid-template-rows: auto auto;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .card-display {
+        grid-column: 1;
+        grid-row: 1;
+        /* Shrink the card box slightly so it fits better */
+        min-height: 400px;
+    }
+
+    .stats-display {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .evolution-chain {
+        /* This makes the evolution section span across both columns */
+        grid-column: 1 / span 2;
+        grid-row: 3;
+        width: 100%;
+    }
+
+    /* 4. Search Bar */
+    #pokemon-search {
+        width: 400px;
+    }
+
+    /* 5. About Me Section */
+    .about-container {
+        max-width: 580px;
+    }
+}

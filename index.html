@@ -1,80 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Home Page for WDD330 course">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PokéDeck Strategist | Research Pokemon TCG Cards and Stats</title>
+    <meta name="description"
+        content="A clean, pastel-themed tool for Pokemon TCG collectors to research card art, battle stats, and evolution chains.">
     <meta name="author" content="Jelina Alexandrine Concha">
 
-    <title>Pokemon Strategist</title>
-
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/style-medium.css">
     <link rel="stylesheet" href="styles/style-desktop.css">
 
     <script type="module" src="scripts/main.js"></script>
 
     <link rel="icon" href="images/favicon.ico">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
-
     <header>
         <div class="logo-area">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+                alt="Pikachu" class="mascot left-mascot">
+    
             <div class="icon-placeholder">
                 <img src="images/pokedeck-icon.png" alt="Pokeball Icon">
             </div>
+            
             <h1>Pokemon Strategist</h1>
+    
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png"
+                alt="Eevee" class="mascot right-mascot">
         </div>
-        
+    
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="favorites.html">My Favorites</a></li>
-                <li><a href="about-me.html">About Me</a></li>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#favorites">My Favorites</a></li>
+                <li><a href="#about">About Me</a></li>
             </ul>
         </nav>
     </header>
 
-    <section class="search-area">
-        <input type="text" placeholder="search... (ex: 'Pikachu')">
-        <button type="submit">search</button>
-    </section>
-
-    <main class="grid-container">
-
-        <article class="card-display">
-            <div class="card-placeholder">
-                (pokemon card will appear here)
+    <main>
+        <div id="home-view" class="view-section">
+            <div class="search-area">
+                <div class="input-wrapper">
+                    <input type="text" id="pokemon-search" placeholder="Enter Pokemon name..." autocomplete="off">
+                    <div id="suggestions" class="suggestions-box"></div>
+                </div>
+                <button id="search-btn">SEARCH</button>
             </div>
-        </article>
 
-        <aside class="stats-display">
-            <div class="box-text">
-                (stats will appear here)
+            <div class="grid-container">
+                <article class="card-display">
+                    <h2 class="box-title">Card Art</h2>
+                    <div id="card-target" class="card-placeholder">
+                        (pokemon card will appear here)
+                    </div>
+                </article>
+
+                <aside class="stats-display">
+                    <h2 class="box-title">Battle Stats</h2>
+                    <div id="stats-target" class="box-text">
+                        (stats will appear here)
+                    </div>
+                    <button type="button" id="save-btn" class="fav-btn" style="display:none;">
+                        Save to Favorites
+                    </button>
+                </aside>
+
+                <article class="evolution-chain">
+                    <h2 class="box-title">Evolution Chain</h2>
+                    <div id="evolution-target" class="box-text">
+                        (evolution chain will appear here)
+                    </div>
+                </article>
             </div>
-        </aside>
+        </div>
 
-        <article class="evolution-chain">
-            <div class="box-text">
-                (pokemon evolution chain will appear here)
+        <section id="favorites-view" class="view-section" style="display: none;">
+            <h2 class="section-title">My Saved Cards</h2>
+            <div id="favorites-grid" class="favorites-container">
+                <p class="empty-msg">You haven't saved any Pokémon yet!</p>
             </div>
-        </article>
+        </section>
 
+        <section id="about-view" class="view-section" style="display: none;">
+            <div class="about-container">
+                <h2 class="box-title">Meet the Developer</h2>
+                <p>
+                    Hello 🌸˚˖⋆! My name is Alex and I'm the strategist behind this PokéDeck.
+                    This project is a fusion of my passion for web development and the world of Pokémon.
+                    My goal was to create a seamless, responsive application that makes exploring 
+                    the National Pokédex an enchanting experience for trainers everywhere.
+                    Please enjoy what this project has to offer! (*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ
+                </p>
+        
+                <div class="top-three-grid">
+                    <div class="top-card">
+                        <img src="images/sylveon-card.webp" alt="Favorite 1">
+                        <span>#1 Favorite</span>
+                    </div>
+
+                    <div class="top-card">
+                        <img src="images/sprigatito-card.webp" alt="Favorite 2">
+                        <span>#2 Favorite</span>
+                    </div>
+
+                    <div class="top-card">
+                        <img src="images/diancie-card.webp" alt="Favorite 3">
+                        <span>#3 Favorite</span>
+                    </div>
+                </div>
+        
+                <div class="social-links">
+                    <h3>Let's Connect! 𓏲 ๋࣭ ࣪ ˖🎐</h3>
+                    <div class="link-buttons">
+                        <a href="https://github.com/xandrineshu" target="_blank" class="social-btn github">
+                            <img src="images/github.svg" alt="GitHub"> GitHub
+                        </a>
+                        <a href="https://www.linkedin.com/in/jelinaalexandrineconcha" target="_blank" class="social-btn linkedin">
+                            <img src="images/linkedin.svg" alt="LinkedIn"> LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p> Made by Jelina Alexandrine Concha | 2026 (Assignment only, Not for Commercial Use)</p>
+        <div class="footer-content">
+            <div class="footer-info">
+                <p>© 2026 | Jelina Alexandrine Concha | WDD330 Portfolio Project</p>
+            </div>
+    
+            <div class="footer-credits">
+                <p>Data provided by <a href="https://pokeapi.co/" target="_blank">PokéAPI</a>.</p>
+                <p class="disclaimer">
+                    Pokémon and Pokémon character names are trademarks of Nintendo.
+                    This project is for educational purposes.
+                </p>
+            </div>
+        </div>
     </footer>
 
 </body>
