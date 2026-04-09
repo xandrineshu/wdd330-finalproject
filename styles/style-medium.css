@@ -94,4 +94,67 @@
     .about-container {
         max-width: 580px;
     }
+
+    /* 6. Evolution Chain */
+    #evolution-target {
+        display: flex !important;
+        flex-direction: row !important;
+        /* Force horizontal */
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px;
+        padding: 20px;
+        width: 100%;
+    }
+    
+    /* Force the nested branch containers to stay invisible and inline */
+    #evolution-target .evo-branch {
+        display: flex !important;
+        flex-direction: row !important;
+        /* Force side-by-side */
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: auto !important;
+        /* Prevents it from taking up 100% width */
+    }
+    
+    /* Individual Evolution Card */
+    .evo-item {
+        text-align: center;
+        background: var(--cream-vanilla);
+        border: 3px solid var(--charcoal);
+        border-radius: 20px;
+        padding: 10px;
+        width: 110px;
+        box-shadow: 4px 4px 0px var(--charcoal);
+        flex-shrink: 0;
+    }
+    
+    .evo-item img {
+        width: 70px;
+        height: 70px;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    /* Fix the arrows: Points right and removes rotation */
+    .evo-arrow {
+        font-size: 1.5rem !important;
+        transform: rotate(0deg) !important;
+        /* FORCE pointing right */
+        display: inline-block !important;
+        margin: 0 5px !important;
+        color: var(--charcoal);
+        font-weight: bold;
+    }
+    
+    /* THE EEVEE EXCEPTION */
+    /* Only wrap if the branch has MANY options (more than 2 items inside) */
+    .evo-branch:has(> .evo-item:nth-child(3)) {
+        flex-wrap: wrap !important;
+        max-width: 500px;
+    }
 }

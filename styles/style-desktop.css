@@ -128,7 +128,6 @@
     }
 
     @keyframes floaty-left {
-
         0%,
         100% {
             transform: translateY(-50%) scaleX(-1);
@@ -143,4 +142,85 @@
     .about-container {
         max-width: 870px;
     }
+
+
+    /* 7. Evolution Branching */
+        #evolution-target {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px;
+        }
+    
+        /* Individual Evolution Card */
+        .evo-item {
+            text-align: center;
+            background: var(--cream-vanilla);
+            border: 3px solid var(--charcoal);
+            border-radius: 20px;
+            padding: 10px;
+            width: 120px;
+            box-shadow: 4px 4px 0px var(--charcoal);
+            flex-shrink: 0;
+            z-index: 2;
+        }
+    
+        .evo-item img {
+            width: 80px;
+            height: 80px;
+            display: block;
+            margin: 0 auto;
+        }
+    
+        /* Base Arrow (Points Right) */
+        .evo-arrow {
+            font-size: 2rem;
+            color: var(--charcoal);
+            font-weight: bold;
+            transform: rotate(0deg);
+            flex-shrink: 0;
+        }
+    
+        /* The Branch Container Fix */
+        .evo-branch {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+        }
+    
+        /* --- THE EEVEE 2x column GRID FIX --- */
+    
+        /* 1. When a branch has many evolutions, treat it as a Grid container */
+        /* This targets the container holding the 8 evolutions */
+        .evo-branch:has(> .evo-branch:nth-child(2)),
+        .evo-branch:has(> .evo-item + .evo-item) {
+            display: grid !important;
+            /* This creates the 2-column stack from your drawing */
+            grid-template-columns: repeat(2, 120px);
+            grid-gap: 15px;
+            align-items: start;
+        }
+    
+        /* 2. Hide internal arrows inside the Eevee grid so they don't mess up the spacing */
+        .evo-branch:has(> .evo-item + .evo-item) .evo-arrow {
+            display: none !important;
+        }
+    
+        /* 3. Special handling for the main Eevee Branching point */
+        /* Ensures Eevee stays on the left and the grid stays on the right */
+        #evolution-target>.evo-branch {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+    
+        /* 4. Keep Pikachu/Raichu linear */
+        /* If there's only one evolution path, stay in a line */
+        .evo-branch:not(:has(> .evo-item + .evo-item)) {
+            display: flex;
+            flex-direction: row;
+        }
 }

@@ -66,14 +66,12 @@ function showSection(id) {
 /* === 2. API FETCH & SEARCH LOGIC       === */
 /* ========================================= */
 
-// --- NEW: TCGDEX API FETCH (API #2) ---
 async function fetchTcgCardImage(name) {
     try {
         const response = await fetch(`https://api.tcgdex.net/v2/en/cards?name=${name}`);
         const cards = await response.json();
 
         if (cards && cards.length > 0) {
-            // Get detail of first card to get the high-res image
             const detailRes = await fetch(`https://api.tcgdex.net/v2/en/cards/${cards[0].id}`);
             const detail = await detailRes.json();
             return detail.image ? `${detail.image}/high.webp` : null;
@@ -91,10 +89,12 @@ async function handleSearch() {
 
     const statsTarget = document.getElementById('stats-target');
     const cardTarget = document.getElementById('card-target');
+    const evoTarget = document.getElementById('evolution-target');
     const saveBtn = document.getElementById('save-btn');
 
     statsTarget.innerHTML = '<div class="loader"></div>';
     cardTarget.innerHTML = '<div class="loader"></div>';
+    evoTarget.innerHTML = '<div class="loader"></div>';
 
     try {
         // API 1: PokeAPI (Stats)
@@ -102,10 +102,11 @@ async function handleSearch() {
         if (!response.ok) throw new Error('Pokemon not found');
         const data = await response.json();
 
+        // Trigger Evolution Logic (Step 5)
+        await fetchEvolutionChain(data.name);
+
         // API 2: TCGDex (Visual Card)
         const tcgImageUrl = await fetchTcgCardImage(data.name);
-
-        // Fallback: Use official artwork if TCG card isn't found
         const finalImageUrl = tcgImageUrl || data.sprites.other['official-artwork'].front_default;
 
         // Update Display Stats
@@ -134,6 +135,7 @@ async function handleSearch() {
     } catch (error) {
         cardTarget.innerHTML = `<p class="error-msg">Hmm... I can't find that Pokémon! 🔍</p>`;
         statsTarget.innerHTML = `<p>Check your spelling and try again!</p>`;
+        evoTarget.innerHTML = '';
         saveBtn.style.display = 'none';
 
         setTimeout(() => {
@@ -227,4 +229,61 @@ async function fetchAllNames() {
     } catch (e) {
         console.error("Failed to load suggestions.");
     }
+}
+
+/* ========================================= */
+/* === 5. EVOLUTION CHAIN LOGIC          === */
+/* ========================================= */
+
+async function fetchEvolutionChain(pokemonName) {
+    try {
+        const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonName}`);
+        const speciesData = await speciesRes.json();
+
+        const evoRes = await fetch(speciesData.evolution_chain.url);
+        const evoData = await evoRes.json();
+
+        const evoContainer = document.getElementById('evolution-target');
+        evoContainer.innerHTML = '';
+
+        processEvoStage(evoData.chain, evoContainer);
+    } catch (error) {
+        console.error("Evolution fetch error:", error);
+        document.getElementById('evolution-target').innerHTML = "<p>Evolution data unavailable.</p>";
+    }
+}
+
+function processEvoStage(stage, container) {
+    const name = stage.species.name;
+    const evoCard = document.createElement('div');
+    evoCard.className = 'evo-item fade-in';
+
+    const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractIdFromUrl(stage.species.url)}.png`;
+
+    evoCard.innerHTML = `
+        <img src="${spriteUrl}" alt="${name}">
+        <p>${name.toUpperCase()}</p>
+    `;
+
+    container.appendChild(evoCard);
+
+    if (stage.evolves_to.length > 0) {
+        const arrow = document.createElement('span');
+        arrow.className = 'evo-arrow';
+        arrow.innerText = '➜';
+        container.appendChild(arrow);
+
+        const branchContainer = document.createElement('div');
+        branchContainer.className = 'evo-branch';
+        container.appendChild(branchContainer);
+
+        stage.evolves_to.forEach(nextStage => {
+            processEvoStage(nextStage, branchContainer);
+        });
+    }
+}
+
+function extractIdFromUrl(url) {
+    const parts = url.split('/');
+    return parts[parts.length - 2];
 }

@@ -616,3 +616,75 @@ footer {
         justify-content: center;
     }
 }
+
+
+/* ========================================= */
+/* === 11. EVOLUTION CHAIN (MOBILE VER)  === */
+/* ========================================= */
+
+#evolution-target {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    /* Slightly more space between vertical items */
+    padding: 20px;
+}
+
+/* Individual Evolution Card - Sized Up */
+.evo-item {
+    text-align: center;
+    background: var(--cream-vanilla);
+    border: 3px solid var(--charcoal);
+    border-radius: 25px;
+    /* Rounder corners for the bigger size */
+    padding: 15px;
+    width: 140px;
+    /* Increased from 110px */
+    box-shadow: 5px 5px 0px var(--charcoal);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+/* Bigger Image */
+.evo-item img {
+    width: 90px;
+    /* Increased from 60px */
+    height: 90px;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+}
+
+.evo-item p {
+    font-size: 0.85rem;
+    /* Slightly bigger text to match */
+    font-weight: bold;
+    margin: 10px 0 0;
+    font-family: 'Kanit', sans-serif;
+    color: var(--charcoal);
+}
+
+/* Evolution Arrow */
+.evo-arrow {
+    font-size: 1.8rem;
+    /* Sized up the arrow */
+    color: var(--charcoal);
+    font-weight: bold;
+    flex-shrink: 0;
+    transform: rotate(90deg);
+    margin: 10px 0;
+}
+
+/* --- THE EEVEE FIX (STACKED) --- */
+.evo-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    /* More space between branching options */
+    width: 100%;
+}
+
