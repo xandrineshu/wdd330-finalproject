@@ -8,23 +8,35 @@ Welcome to **PokéDeck**! A sleek, responsive, and high-performance Pokémon dis
 
 ## ✨ Key Features
 
-* **🔍 Multi-API Search:** Synchronizes data from two distinct sources to provide both battle statistics and high-resolution TCG card art.
-* **🛡️ Smart Fallback System:** Automatically detects if TCG data is unavailable and switches to official game artwork to ensure a seamless UI.
+* **🔍 Dual-API Integration:** Synchronizes data from PokéAPI (stats/logic) and TCGdex (visuals) to create a unified "Trainer Card" experience.
+
+* **🛡️ Smart Fallback System:** Automatically switches to official game artwork if TCG data is unavailable to ensure the UI never breaks.
+
 * **💖 Personal Deck:** Save your favorite Pokémon to a "Favorites" gallery powered by LocalStorage.
-* **🧬 Evolution Tracking:** A recursive algorithm that maps out complex evolution chains.
+
+* **🧬 Dynamic Evolution Mapping:** A recursive algorithm that maps out complex, branching evolution chains (like Eevee) using modern CSS :has() logic and Grid layouts.
+
 * **✨ Interactive Polish:** Custom JS sparkle particle systems and smooth CSS animations.
-* **📱 Fully Responsive:** Designed with CSS Grid and Flexbox for a flawless mobile experience.
+
+* **📱 Fully Responsive:** Custom-built layout transitions for Mobile (vertical stack), Tablet, and Desktop (2-column family tree grid).
+
 
 
 ## 🛠️ Built With
 
 * **HTML5 & CSS3** (Custom Root Variables & Neo-Brutalism style)
+
 * **Vanilla JavaScript** (ES6+ Asynchronous Fetching)
+
 * **PokéAPI** (Core Statistics & Evolution Data)
+
 * **TCGDex API** (High-Resolution Trading Card Visuals)
+
 * **WebP/SVG** (High-performance asset optimization)
 
+
 ---
+
 
 ## 🚀 Project Timeline & Challenges
 
@@ -45,20 +57,25 @@ Welcome to **PokéDeck**! A sleek, responsive, and high-performance Pokémon dis
 * **ADDED:** Created a JS-driven Sparkle system and a professional credits footer.
 * Final testing and deployment.
 
+
 ---
 
+
 ## 👩‍💻 Meet the Developer
-I'm a strategist and developer who loves blending clean code with cute and aesthetically pleasing design.
+I'm a developer who loves blending clean code with cute, functional design. This project reflects my journey through WDD 330, focusing on how to solve complex layout problems with clean, modern CSS and JavaScript.
 Check out my other work or connect with me below!
 
 * **LinkedIn:** www.linkedin.com/in/jelinaalexandrineconcha
 
+
 ---
+
 
 ## 📜 Credits & Legal
 
 * **Data Sources:** Core data provided by [PokéAPI](https://pokeapi.co/) and visual card data provided by [TCGDex](https://tcgdex.dev/).
-* **Legal:** Pokémon and Pokémon character names are trademarks of Nintendo. This project is for educational purposes only.
+
+* **Legal:** Pokémon and Pokémon character names are trademarks of Nintendo. This project is for educational purposes as part of the WDD 330 course at BYU-Idaho.
 
 ---
 *Made with ✨ and 💘 by Alex C. *
