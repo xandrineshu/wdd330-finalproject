@@ -599,7 +599,6 @@ footer {
     box-shadow: 4px 4px 0px var(--charcoal);
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 600px) {
     .top-three-grid {
         grid-template-columns: 1fr;
@@ -619,7 +618,7 @@ footer {
 
 
 /* ========================================= */
-/* === 11. EVOLUTION CHAIN (MOBILE VER)  === */
+/* === 11. EVOLUTION CHAIN === */
 /* ========================================= */
 
 #evolution-target {
